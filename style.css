@@ -1,0 +1,519 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap');
+
+/* 定義 CSS 變數 */
+:root {
+    --bg-color: #F4EBD9;      
+    --text-color: #2F2E2C;    
+    --border-color: #D5C7B5;  
+    --primary-color: #C34A41; 
+    --primary-hover: #A73322;
+    --secondary-color: #5B7A6B; 
+    --secondary-hover: #4A6559;
+    --error-color: #7A7671;   
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    
+    /* ✅ 呼叫古典書法楷書作為主體，並以思源宋體作為備用 */
+    font-family: "Kaiti TC", "BiauKai", "DFKai-SB", "TW-Kai", "楷體", "Kaiti", 'Noto Serif TC', serif; 
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* ================= 介面切換設定 ================= */
+.screen {
+    display: none;
+    opacity: 0;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.screen.active {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ================= 卡片與立體感設計 ================= */
+.card {
+    background-color: #fffaf2;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 6px 16px rgba(47, 46, 44, 0.08);
+    text-align: center;
+    
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.wide-card {
+    max-width: 1600px; 
+}
+
+/* ================= 標題與說明文字放大 ================= */
+h1, h2, h3 {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 56px; 
+}
+h2 {
+    font-size: 42px; 
+    margin-bottom: 20px;
+}
+
+.stage-card > p {
+    font-size: 24px; 
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* ================= 按鈕設計 ================= */
+button {
+    font-family: inherit;
+    font-size: 16px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.btn-primary { background-color: var(--primary-color); color: white; }
+.btn-primary:hover { background-color: var(--primary-hover); }
+
+.btn-secondary { background-color: var(--secondary-color); color: white; }
+.btn-secondary:hover { background-color: var(--secondary-hover); }
+
+.btn-error { background-color: var(--error-color); color: white; }
+
+/* ================= 遊戲內部排版 (計時器與狀態列) ================= */
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.status {
+    font-size: 26px; 
+    font-weight: bold;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.status-bar .status {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0;
+}
+
+.timer {
+    font-size: 26px; 
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 0;
+    padding: 8px 15px;
+    background-color: rgba(195, 74, 65, 0.1);
+    border-radius: 4px;
+    border: 1px solid var(--primary-color);
+}
+
+.timer.warning {
+    animation: flash 1s infinite alternate;
+}
+
+@keyframes flash {
+    from { background-color: rgba(195, 74, 65, 0.1); color: var(--primary-color); }
+    to { background-color: var(--primary-color); color: white; }
+}
+
+/* ================= 第一階段：畫間尋寶樣式 ================= */
+.question-box {
+    background-color: rgba(213, 199, 181, 0.2);
+    border: 1px dashed var(--border-color);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.hint-text {
+    font-size: 22px; 
+    line-height: 1.6;
+}
+
+.image-container {
+    margin: 20px auto;
+    border: 2px solid var(--border-color);
+    padding: 15px;
+    background-color: #fff;
+    display: inline-block; 
+    max-width: 100%;       
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 65vh; 
+    display: block;
+    object-fit: contain;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* ✅ 改造第一階段選項按鈕：置中、取消加粗、保留字距的呼吸感 */
+.opt-btn {
+    background-color: #FAF5ED;
+    border: 1px solid var(--border-color); /* 邊框調細，配合文字的輕盈感 */
+    color: var(--text-color);
+    
+    text-align: center;      
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 65px;        
+    padding: 10px 20px;
+    
+    font-size: 20px;         
+    font-weight: normal;     /* ✅ 拿掉加粗，恢復楷體原本優雅的筆觸 */
+    letter-spacing: 2px;     /* 保留字距，維持排版的呼吸感 */
+    
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.opt-btn:hover { 
+    background-color: #EFE8D8; 
+    border-color: var(--primary-color); 
+    transform: translateY(-2px);        
+}
+
+.opt-btn.correct { 
+    background-color: var(--secondary-color); 
+    color: white; 
+    border-color: var(--secondary-color);
+}
+
+.opt-btn.wrong { 
+    background-color: var(--error-color); 
+    color: white; 
+    border-color: var(--error-color);
+}
+
+.feedback-text {
+    min-height: 24px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.result-box {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--border-color);
+}
+
+.explanation-box {
+    background-color: #EFE8D8;
+    border-left: 6px solid var(--secondary-color);
+    padding: 20px;
+    margin-top: 25px;
+    border-radius: 4px;
+    text-align: left;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+    animation: fadeIn 0.4s ease;
+}
+
+.explanation-title {
+    color: var(--secondary-color);
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.explanation-box .feedback-text {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: normal;
+    color: var(--text-color);
+}
+
+#btn-s1-next-q {
+    display: block;
+    width: 100%;
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+/* ================= 第二階段：網格化連線配對區塊 ================= */
+.match-container {
+    display: flex;
+    flex-direction: row; 
+    gap: 40px; 
+    margin-top: 50px; 
+    align-items: flex-start; /* 靠上對齊，讓總高度自動精準切齊 */
+}
+
+/* 左側圖片區：佔 40%，一排 4 個 */
+.match-left-col {
+    display: grid;
+    flex: 4; 
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px; /* 統一間距 15px */
+    align-content: start; 
+}
+
+/* 右側文字區：佔 60%，一排 2 個 */
+.match-right-col {
+    display: grid;
+    flex: 6; 
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px; /* 統一間距 15px */
+    align-content: start;
+}
+
+/* 左側圖片樣式：固定高度 150px */
+.match-item-img {
+    background-color: #FAF5ED;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    overflow: hidden;
+    
+    width: 100%;
+    height: 150px; /* ✅ 精準固定高度 150px */
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.match-item-img img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px; 
+}
+
+.match-item-img:hover { border-color: var(--primary-color); }
+.match-item-img.selected { 
+    border-color: var(--primary-color); 
+    box-shadow: 0 0 10px rgba(195, 74, 65, 0.5);
+    transform: scale(1.05);
+    z-index: 10;
+}
+.match-item-img.matched { 
+    border-color: var(--secondary-color); 
+    opacity: 0.5; 
+    pointer-events: none; 
+    filter: grayscale(80%);
+}
+.match-item-img.error-shake {
+    border-color: var(--error-color);
+    animation: shake 0.4s;
+}
+
+/* 右側文字樣式：固定高度 67.5px */
+.match-item-text {
+    background-color: #FAF5ED;
+    border: 1px solid var(--border-color);
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    
+    width: 100%;
+    height: 67.5px; /* ✅ 精準固定高度 67.5px，確保與左側 5 排圖片完全平齊 */
+    
+    text-align: left;
+    line-height: 1.35;
+    font-size: 15px; /* 適中大小，確保多行文字能舒服塞入 67.5px */
+    overflow: hidden;
+}
+
+.match-item-text:hover { background-color: var(--border-color); }
+.match-item-text.selected { 
+    background-color: var(--primary-color); 
+    color: white; 
+}
+.match-item-text.matched { 
+    background-color: var(--secondary-color); 
+    color: white; 
+    opacity: 0.7; 
+    pointer-events: none; 
+}
+.match-item-text.error-shake {
+    background-color: var(--error-color);
+    color: white;
+    animation: shake 0.4s;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+/* ================= 最終結算區塊 ================= */
+.final-score-box {
+    background-color: rgba(213, 199, 181, 0.3);
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    border: 2px solid var(--primary-color);
+}
+.final-score-box h2 {
+    font-size: 48px;
+    margin: 0;
+}
+
+/* ✅ 結算時間樣式 */
+.final-time {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-top: -5px;
+    margin-bottom: 25px;
+}
+
+.title-text { font-size: 24px; color: var(--secondary-color); }
+.desc-text { font-size: 18px; line-height: 1.6; margin-bottom: 30px;}
+.ending-text { color: var(--error-color); font-style: italic; margin-bottom: 30px;}
+
+/* ================= 音樂控制區 ================= */
+.audio-controls {
+    position: fixed;
+    top: 25px;
+    left: 30px; /* ✅ 從 right 改成 left，把按鈕移到畫面左邊 */
+    background-color: rgba(250, 245, 237, 0.85); 
+    backdrop-filter: blur(5px);                  
+    border: 1px solid var(--border-color);
+    border-radius: 30px;                         
+    padding: 10px 15px; /* 預設較小的邊距，看起來像一顆圓按鈕 */
+    display: flex;
+    align-items: center;
+    gap: 0; /* ✅ 預設間距為 0，把拉條隱藏起來 */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    z-index: 1000; 
+    transition: all 0.4s ease; /* 展開收合的平滑動畫 */
+}
+
+/* ✅ 當滑鼠碰到音樂區塊時的展開狀態 */
+.audio-controls:hover {
+    background-color: rgba(250, 245, 237, 1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    gap: 12px; /* 撐開按鈕與拉條的距離 */
+    padding: 10px 18px; /* 稍微變寬的邊距 */
+}
+
+#mute-btn {
+    font-size: 22px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+#mute-btn:hover {
+    transform: scale(1.1);
+}
+
+/* ✅ 音量拉條：預設隱藏成寬度 0，滑鼠碰到才出現 */
+#volume-slider {
+    width: 0;               /* 預設寬度 0 */
+    opacity: 0;             /* 預設透明看不到 */
+    pointer-events: none;   /* 隱藏時不可點擊 */
+    cursor: pointer;
+    accent-color: var(--primary-color); 
+    transition: all 0.4s ease; /* 拉條滑出的平滑動畫 */
+}
+
+/* ✅ 當滑鼠碰到外框，把拉條展開 */
+.audio-controls:hover #volume-slider {
+    width: 90px;            /* 恢復原本的寬度 */
+    opacity: 1;             /* 恢復清晰可見 */
+    pointer-events: auto;   /* 恢復可點擊調整 */
+}
+
+/* ================= 教學影片按鈕 ================= */
+.video-guide-btn {
+    position: fixed;
+    top: 85px; /* 精算過的位置，剛好在音樂控制列的正下方 */
+    left: 30px;
+    background-color: rgba(250, 245, 237, 0.85); 
+    backdrop-filter: blur(5px);                  
+    border: 1px solid var(--border-color);
+    border-radius: 30px;                         
+    padding: 8px 15px; 
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    z-index: 1000; 
+    transition: all 0.3s ease;
+    
+    /* 文字樣式設定 */
+    text-decoration: none; /* 移除預設的超連結底線 */
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.video-guide-btn:hover {
+    background-color: rgba(250, 245, 237, 1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px); /* 游標滑過時微微上浮 */
+    color: var(--primary-color); /* 文字變成主題的硃砂紅 */
+}

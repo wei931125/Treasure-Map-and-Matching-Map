@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>悟道•畫間的禪意</title>
+    
+    <!-- 引入 Google Fonts 思源宋體 (Noto Serif TC) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ✅ 新增：懸浮音樂控制區 -->
+    <div class="audio-controls">
+        <span id="mute-btn" title="靜音/播放">🔊</span>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.3">
+        <!-- 音樂播放器 (請確保你的音樂檔名為 bgm.mp3) -->
+        <audio id="bg-music" loop>
+            <source src="遊戲音樂1.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- ✅ 新增：觀看操作影片按鈕 (放在音樂控制區下方) -->
+    <!-- ⚠️ 請將 href 裡面的網址換成你實際的 YouTube 或影片連結 -->
+    <a href="遊戲操作影片2.mp4" target="_blank" class="video-guide-btn" title="觀看操作影片">
+        🎬 觀看教學
+    </a>
+
+    <!-- 封面介面 -->
+    <div id="cover-screen" class="screen active">
+        <div class="card cover-card">
+            <h1>悟道•畫間的禪意</h1>
+            <div class="overview">
+                <p><strong>遊戲概述</strong></p>
+                <p>時長：15~20分鐘</p>
+                <p>玩法：尋寶點擊、物品拖曳配對</p>
+                <p>關卡：總共分為兩個階段（畫間尋寶、禪意連線）</p>
+            </div>
+            <button class="btn-primary" onclick="startGame()">進入遊戲</button>
+        </div>
+    </div>
+
+    <!-- 第一階段：畫間尋寶 -->
+    <div id="stage1-screen" class="screen">
+        <div class="card stage-card wide-card">
+            <h2>第一階段：畫間尋寶</h2>
+            <div id="stage1-content">
+                <div class="status-bar">
+                    <p class="status">目前分數：<span id="s1-score">50</span> / 50 | 題號：<span id="s1-progress">1</span> / 10</p>
+                    <p class="timer">剩餘時間：<span id="s1-timer">05:00</span></p>
+                </div>
+                
+                <div class="question-box">
+                    <h3 id="s1-artwork-title"></h3>
+                    <p id="s1-hint" class="hint-text"></p>
+                </div>
+                
+                <div id="s1-image-container" class="image-container">
+                    <img id="s1-artwork-img" src="" alt="畫作圖片">
+                </div>
+
+                <div id="s1-options" class="options-container options-grid">
+                    <!-- 選項按鈕會透過 JS 動態生成 -->
+                </div>
+                
+                <div id="s1-explanation-box" class="explanation-box hidden">
+                    <h4 class="explanation-title">💡 畫境解析</h4>
+                    <p id="s1-feedback" class="feedback-text"></p>
+                    <button id="btn-s1-next-q" class="btn-primary" onclick="nextS1Question()">下一題 ➔</button>
+                </div>
+            </div>
+            
+            <div id="stage1-result" class="hidden result-box">
+                <h3 id="s1-result-msg"></h3>
+                <button id="btn-s1-retry" class="btn-error hidden" onclick="startStage1()">重新測驗</button>
+                <button id="btn-s1-next" class="btn-primary hidden" onclick="enterStage2()">進入下一關</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二階段：禪意連線 -->
+    <div id="stage2-screen" class="screen">
+        <div class="card stage-card wide-card">
+            <h2>第二階段：禪意連線</h2>
+            <p>點擊左側的「物件圖片」，再點擊右側對應的「意義/象徵」文字進行配對。</p>
+            <div id="stage2-content">
+                <p class="status">目前分數：<span id="s2-score">50</span> / 50</p>
+                
+                <div class="match-container">
+                    <div id="match-left" class="match-col match-left-col"></div>
+                    <div id="match-right" class="match-col match-right-col"></div>
+                </div>
+
+                <div id="s2-explanation-box" class="explanation-box hidden">
+                    <h4 class="explanation-title">💡 禪意解析</h4>
+                    <p id="s2-feedback" class="feedback-text"></p>
+                </div>
+            </div>
+
+            <div id="stage2-result" class="hidden result-box">
+                <h3 id="s2-result-msg"></h3>
+                <button id="btn-s2-retry" class="btn-error hidden" onclick="startStage2()">重新測驗</button>
+                <button id="btn-s2-next" class="btn-primary hidden" onclick="enterFinalResult()">觀看結算</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 最終結算介面 -->
+    <div id="result-screen" class="screen">
+        <div class="card result-card">
+            <h1>悟道圓滿</h1>
+            <div class="final-score-box">
+                <p>最終總分</p>
+                <h2 id="final-score">100</h2>
+            </div>
+            
+            <p class="final-time">總通關耗時：<span id="final-time-text">00:00</span></p>
+
+            <h3 id="final-title" class="title-text">【天人合一 悟道行者】</h3>
+            <p id="final-desc" class="desc-text"></p>
+            <p class="ending-text">受光者亦能發光。願這份大愛的微光，能在你手中薪火相傳。</p>
+            <button class="btn-secondary" onclick="resetGame()">重新體驗</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
