@@ -2,14 +2,14 @@
 
 /* 定義 CSS 變數 */
 :root {
-    --bg-color: #F4EBD9;      
     --text-color: #2F2E2C;    
     --border-color: #D5C7B5;  
-    --primary-color: #C34A41; 
-    --primary-hover: #A73322;
+    --primary-color: #A33A31; 
+    --primary-hover: #862B23;
     --secondary-color: #5B7A6B; 
     --secondary-hover: #4A6559;
-    --error-color: #7A7671;   
+    --error-color: #7A7671;
+    --ancient-brown-line: #745A3C; 
 }
 
 * {
@@ -18,37 +18,31 @@
 
 body {
     margin: 0;
-    padding: 20px;
-    background-color: var(--bg-color);
+    padding: 0;
     color: var(--text-color);
-    
-    /* ✅ 呼叫古典書法楷書作為主體，並以思源宋體作為備用 */
     font-family: "Kaiti TC", "BiauKai", "DFKai-SB", "TW-Kai", "楷體", "Kaiti", 'Noto Serif TC', serif; 
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; 
 }
 
 /* ================= 介面切換設定 ================= */
 .screen {
     display: none;
-    opacity: 0;
-    transition: all 0.3s ease;
-    width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
 }
 
 .screen.active {
-    display: block;
-    opacity: 1;
-    animation: fadeIn 0.5s ease forwards;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.35s ease forwards;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -56,50 +50,265 @@ body {
     display: none !important;
 }
 
-/* ================= 卡片與立體感設計 ================= */
-.card {
-    background-color: #fffaf2;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 40px;
-    box-shadow: 0 6px 16px rgba(47, 46, 44, 0.08);
+/* ================= 三個情境獨立的背景顏色設定 ================= */
+/* 1. 封面：暖赭金宣紙漸層 */
+#cover-screen {
+    background: radial-gradient(circle, #D8C7AE 0%, #C3AF93 100%);
+    z-index: 10;
+}
+
+/* 2. 第一階段：清朗雅集米白天光漸層 (完美融合第一情境圖邊緣) */
+#stage1-screen {
+    background: radial-gradient(circle, #EFE9DD 0%, #DFD7C7 100%);
+}
+
+/* 3. 第二階段：沉穩蒼松灰赭老絹漸層 (完美融合第二情境圖邊緣) */
+#stage2-screen {
+    background: radial-gradient(circle, #CDC1B0 0%, #B5A793 100%);
+}
+
+/* 4. 結算介面：回歸封面溫潤底色 */
+#result-screen {
+    background: radial-gradient(circle, #D8C7AE 0%, #C3AF93 100%);
+}
+
+/* ================= 全場景 16:9 古風背景畫卷容器 ================= */
+.canvas-container-16-9 {
+    width: 100vw;
+    height: 56.25vw; /* 16:9 比例 */
+    max-height: 100vh;
+    max-width: 177.78vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.25);
+    padding: 18px 25px;
+    box-sizing: border-box;
+}
+
+/* 各情境背景圖檔連結 */
+.bg-cover {
+    background-image: url('封面背景圖.jpg');
+}
+
+.bg-stage1 {
+    background-image: url('第一情境背景圖.jpg');
+}
+
+.bg-stage2 {
+    background-image: url('第二情境背景圖.jpg');
+}
+
+/* ================= 封面專屬：微透宣紙框 ================= */
+.cover-card {
+    background-color: rgba(255, 252, 245, 0.22) !important;
+    backdrop-filter: blur(1.5px) !important;
+    -webkit-backdrop-filter: blur(1.5px) !important;
+    border: 1.5px solid var(--ancient-brown-line) !important;
+    position: relative;
+    border-radius: 0 !important;
+    padding: 40px 55px 45px 55px;
+    max-width: 760px;
+    width: 70%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
     text-align: center;
-    
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
+    z-index: 20; 
 }
 
-.wide-card {
-    max-width: 1600px; 
+.cover-card::before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    bottom: 7px;
+    left: 7px;
+    right: 7px;
+    border: 1.5px solid var(--ancient-brown-line);
+    pointer-events: none;
 }
 
-/* ================= 標題與說明文字放大 ================= */
-h1, h2, h3 {
-    color: var(--primary-color);
+.cover-card h1 {
+    font-size: 50px;
+    color: #1F1914;
+    letter-spacing: 6px;
+    margin-bottom: 8px;
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 1), 
+        0 0 20px rgba(255, 255, 255, 0.95), 
+        0 0 35px rgba(255, 255, 255, 0.85);
+}
+
+.cover-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ancient-brown-line), transparent);
+    margin: 12px auto 18px auto;
+    width: 90%;
+}
+
+.cover-card .overview, .cover-card p {
+    font-size: 20px;
+    line-height: 1.7;
+    color: #1a1613;
     font-weight: bold;
-    margin-top: 0;
+    letter-spacing: 1px;
+    text-shadow: 
+        0 0 8px rgba(255, 255, 255, 1), 
+        0 0 16px rgba(255, 255, 255, 0.9);
+    margin-bottom: 6px;
 }
 
-h1 {
-    font-size: 56px; 
-}
-h2 {
-    font-size: 42px; 
-    margin-bottom: 20px;
-}
-
-.stage-card > p {
-    font-size: 24px; 
-    line-height: 1.5;
-    margin-bottom: 20px;
+.cover-card .overview-title {
+    font-size: 23px;
+    color: #B9382B !important;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    text-shadow: 
+        0 0 8px rgba(255, 255, 255, 1), 
+        0 0 16px rgba(255, 255, 255, 0.95);
 }
 
-/* ================= 按鈕設計 ================= */
+.btn-cover-start {
+    font-size: 22px !important;
+    letter-spacing: 4px;
+    padding: 10px 48px !important;
+    margin-top: 15px;
+    border-radius: 30px !important;
+    background: linear-gradient(180deg, #9C382D 0%, #7E2A20 100%) !important;
+    color: #FFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+    text-shadow: none !important;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 99; 
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.btn-cover-start:hover {
+    background: linear-gradient(180deg, #B04135 0%, #8D3025 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* ================= 浮動音樂與教學按鈕 (全局固定) ================= */
+.audio-controls {
+    position: fixed;
+    top: 25px;
+    left: 30px; 
+    background-color: rgba(250, 245, 237, 0.88); 
+    backdrop-filter: blur(5px);                  
+    border: 1px solid var(--ancient-brown-line);
+    border-radius: 30px;                         
+    padding: 8px 14px; 
+    display: flex;
+    align-items: center;
+    gap: 0; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    z-index: 100; 
+    transition: all 0.4s ease; 
+}
+
+.audio-controls:hover {
+    background-color: rgba(250, 245, 237, 1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    gap: 12px; 
+    padding: 8px 18px; 
+}
+
+#mute-btn {
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+#mute-btn:hover {
+    transform: scale(1.1);
+}
+
+#volume-slider {
+    width: 0;               
+    opacity: 0;             
+    pointer-events: none;   
+    cursor: pointer;
+    accent-color: var(--primary-color); 
+    transition: all 0.4s ease; 
+}
+
+.audio-controls:hover #volume-slider {
+    width: 85px;            
+    opacity: 1;             
+    pointer-events: auto;   
+}
+
+.video-guide-btn {
+    position: fixed;
+    top: 80px; 
+    left: 30px;
+    background-color: rgba(250, 245, 237, 0.88); 
+    backdrop-filter: blur(5px);                  
+    border: 1px solid var(--ancient-brown-line);
+    border-radius: 30px;                         
+    padding: 8px 16px; 
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    z-index: 100; 
+    text-decoration: none; 
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.video-guide-btn:hover {
+    background-color: rgba(250, 245, 237, 1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    transform: translateY(-2px); 
+    color: var(--primary-color); 
+}
+
+/* ================= 關卡卡片：保有閱讀保護的宣紙襯底 ================= */
+.card {
+    background-color: rgba(255, 250, 242, 0.72);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border: 1.5px solid var(--ancient-brown-line);
+    position: relative;
+    border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(47, 46, 44, 0.12);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.fit-stage-card {
+    width: 95% !important;
+    height: 94% !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 12px 24px !important;
+    overflow: hidden;
+}
+
+.fit-stage-card h2 {
+    font-size: 26px; 
+    color: var(--primary-color);
+    margin: 0 0 8px 0;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* ================= 按鈕通用設計 ================= */
 button {
     font-family: inherit;
     font-size: 16px;
-    padding: 12px 24px;
+    padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -108,119 +317,154 @@ button {
 }
 
 .btn-primary { background-color: var(--primary-color); color: white; }
-.btn-primary:hover { background-color: var(--primary-hover); }
+.btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
 
 .btn-secondary { background-color: var(--secondary-color); color: white; }
 .btn-secondary:hover { background-color: var(--secondary-hover); }
 
 .btn-error { background-color: var(--error-color); color: white; }
 
-/* ================= 遊戲內部排版 (計時器與狀態列) ================= */
-.status-bar {
+/* ================= 第一階段樣式 ================= */
+#stage1-content {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 15px;
-    margin-bottom: 20px;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0; 
 }
 
-.status {
-    font-size: 26px; 
-    font-weight: bold;
-    color: var(--text-color);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 15px;
+.s1-main-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    width: 100%;
+    align-items: stretch;
+    min-height: 0;
 }
 
-.status-bar .status {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin: 0;
+.s1-left-panel, .s1-right-panel {
+    flex: 1 1 0;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
-.timer {
-    font-size: 26px; 
-    font-weight: bold;
-    color: var(--primary-color);
-    margin: 0;
-    padding: 8px 15px;
-    background-color: rgba(195, 74, 65, 0.1);
-    border-radius: 4px;
-    border: 1px solid var(--primary-color);
-}
-
-.timer.warning {
-    animation: flash 1s infinite alternate;
-}
-
-@keyframes flash {
-    from { background-color: rgba(195, 74, 65, 0.1); color: var(--primary-color); }
-    to { background-color: var(--primary-color); color: white; }
-}
-
-/* ================= 第一階段：畫間尋寶樣式 ================= */
 .question-box {
-    background-color: rgba(213, 199, 181, 0.2);
+    background-color: rgba(255, 255, 255, 0.55);
     border: 1px dashed var(--border-color);
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 4px;
+    padding: 8px 16px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    text-align: center;
+    min-height: 75px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.question-box h3 {
+    font-size: 18px;
+    margin: 0 0 4px 0;
+    color: var(--primary-color);
+    flex-shrink: 0;
 }
 
 .hint-text {
-    font-size: 22px; 
-    line-height: 1.6;
+    font-size: 15px; 
+    line-height: 1.4;
+    margin: 0;
+    color: var(--text-color);
+    white-space: normal !important;
+    word-break: break-word;
+}
+
+.s1-status-box {
+    min-height: 75px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed var(--border-color);
+    background-color: rgba(255, 255, 255, 0.45);
+    padding: 0 20px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.s1-status-box .status {
+    font-size: 20px; 
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0;
+    letter-spacing: 1px;
 }
 
 .image-container {
-    margin: 20px auto;
+    flex: 1;
     border: 2px solid var(--border-color);
-    padding: 15px;
-    background-color: #fff;
-    display: inline-block; 
-    max-width: 100%;       
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 6px;
+    min-height: 0;
+    box-sizing: border-box;
 }
 
 .image-container img {
     max-width: 100%;
-    max-height: 65vh; 
+    max-height: 100%; 
     display: block;
     object-fit: contain;
 }
 
-.options-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 20px;
+.s1-options-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    min-height: 0;
 }
 
-/* ✅ 改造第一階段選項按鈕：置中、取消加粗、保留字距的呼吸感 */
+.options-vertical {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
 .opt-btn {
-    background-color: #FAF5ED;
-    border: 1px solid var(--border-color); /* 邊框調細，配合文字的輕盈感 */
+    background-color: rgba(255, 250, 242, 0.9);
+    border: 1px solid var(--border-color);
     color: var(--text-color);
-    
     text-align: center;      
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 65px;        
-    padding: 10px 20px;
-    
-    font-size: 20px;         
-    font-weight: normal;     /* ✅ 拿掉加粗，恢復楷體原本優雅的筆觸 */
-    letter-spacing: 2px;     /* 保留字距，維持排版的呼吸感 */
-    
-    border-radius: 8px;
+    flex: 1; 
+    width: 100%;
+    padding: 6px 16px;
+    font-size: 16px;         
+    font-weight: normal;     
+    letter-spacing: 1px;     
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
 }
 
 .opt-btn:hover { 
-    background-color: #EFE8D8; 
+    background-color: #FAF0DF; 
     border-color: var(--primary-color); 
     transform: translateY(-2px);        
 }
@@ -237,158 +481,230 @@ button {
     border-color: var(--error-color);
 }
 
-.feedback-text {
-    min-height: 24px;
-    margin-top: 15px;
-    font-weight: bold;
-}
-
-.result-box {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px dashed var(--border-color);
-}
-
 .explanation-box {
-    background-color: #EFE8D8;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 250, 242, 0.98);
+    border: 1.5px solid var(--secondary-color);
     border-left: 6px solid var(--secondary-color);
-    padding: 20px;
-    margin-top: 25px;
-    border-radius: 4px;
+    padding: 12px 18px;
+    border-radius: 6px;
     text-align: left;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
-    animation: fadeIn 0.4s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    animation: fadeIn 0.3s ease;
+    z-index: 10;
 }
 
 .explanation-title {
     color: var(--secondary-color);
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 22px;
+    margin: 0 0 6px 0;
+    font-size: 17px;
 }
 
 .explanation-box .feedback-text {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 18px;
-    line-height: 1.6;
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    line-height: 1.45;
     font-weight: normal;
     color: var(--text-color);
 }
 
-#btn-s1-next-q {
+#btn-s1-next-q, #btn-s2-next-group {
     display: block;
     width: 100%;
-    margin-top: 15px;
-    font-size: 20px;
+    margin-top: 6px;
+    font-size: 16px;
+    padding: 8px;
 }
 
-/* ================= 第二階段：網格化連線配對區塊 ================= */
-.match-container {
+.result-box {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--border-color);
+}
+
+/* ================= 第二階段：2x2 圖片 + 右側垂直選項 ================= */
+#stage2-content {
+    flex: 1;
     display: flex;
-    flex-direction: row; 
-    gap: 40px; 
-    margin-top: 50px; 
-    align-items: flex-start; /* 靠上對齊，讓總高度自動精準切齊 */
+    flex-direction: column;
+    min-height: 0;
 }
 
-/* 左側圖片區：佔 40%，一排 4 個 */
-.match-left-col {
-    display: grid;
-    flex: 4; 
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 15px; /* 統一間距 15px */
-    align-content: start; 
-}
-
-/* 右側文字區：佔 60%，一排 2 個 */
-.match-right-col {
-    display: grid;
-    flex: 6; 
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 15px; /* 統一間距 15px */
-    align-content: start;
-}
-
-/* 左側圖片樣式：固定高度 150px */
-.match-item-img {
-    background-color: #FAF5ED;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    overflow: hidden;
-    
+.s2-top-bar {
+    display: flex;
+    gap: 25px;
     width: 100%;
-    height: 150px; /* ✅ 精準固定高度 150px */
-    margin: 0;
+    flex-shrink: 0;
+}
 
+.s2-guide-box {
+    flex: 1 1 0;
+    background-color: rgba(255, 255, 255, 0.55);
+    border: 1px dashed var(--border-color);
+    padding: 8px 16px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.s2-status-box {
+    flex: 1 1 0;
+    min-height: 60px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed var(--border-color);
+    background-color: rgba(255, 255, 255, 0.45);
+    padding: 0 20px;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.s2-status-box .status {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.s2-main-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    width: 100%;
+    align-items: stretch;
+    min-height: 0;
+}
+
+.s2-left-grid {
+    flex: 1 1 0;
+    width: 50%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 12px;
+    min-height: 0;
+    height: 100%;
+}
+
+.s2-right-wrapper {
+    flex: 1 1 0;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 0;
+}
+
+.s2-right-col {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.match-item-img {
+    background-color: rgba(255, 255, 255, 0.75);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .match-item-img img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    border-radius: 4px; 
+    border-radius: 4px;
 }
 
-.match-item-img:hover { border-color: var(--primary-color); }
+.match-item-img:hover { 
+    border-color: var(--primary-color); 
+    transform: translateY(-2px);
+}
+
 .match-item-img.selected { 
     border-color: var(--primary-color); 
-    box-shadow: 0 0 10px rgba(195, 74, 65, 0.5);
-    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(195, 74, 65, 0.4);
+    transform: scale(1.02);
     z-index: 10;
 }
+
 .match-item-img.matched { 
     border-color: var(--secondary-color); 
-    opacity: 0.5; 
+    opacity: 0.55; 
     pointer-events: none; 
     filter: grayscale(80%);
 }
+
 .match-item-img.error-shake {
     border-color: var(--error-color);
     animation: shake 0.4s;
 }
 
-/* 右側文字樣式：固定高度 67.5px */
 .match-item-text {
-    background-color: #FAF5ED;
+    background-color: rgba(255, 250, 242, 0.9);
     border: 1px solid var(--border-color);
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    
+    color: var(--text-color);
+    text-align: left;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    
+    flex: 1; 
     width: 100%;
-    height: 67.5px; /* ✅ 精準固定高度 67.5px，確保與左側 5 排圖片完全平齊 */
-    
-    text-align: left;
+    padding: 10px 18px;
+    font-size: 16px;
     line-height: 1.35;
-    font-size: 15px; /* 適中大小，確保多行文字能舒服塞入 67.5px */
-    overflow: hidden;
+    letter-spacing: 1px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    box-sizing: border-box;
 }
 
-.match-item-text:hover { background-color: var(--border-color); }
+.match-item-text:hover { 
+    background-color: #FAF0DF; 
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
 .match-item-text.selected { 
     background-color: var(--primary-color); 
     color: white; 
+    border-color: var(--primary-color);
 }
+
 .match-item-text.matched { 
     background-color: var(--secondary-color); 
     color: white; 
-    opacity: 0.7; 
+    opacity: 0.65; 
     pointer-events: none; 
+    border-color: var(--secondary-color);
 }
+
 .match-item-text.error-shake {
     background-color: var(--error-color);
     color: white;
@@ -404,116 +720,37 @@ button {
 }
 
 /* ================= 最終結算區塊 ================= */
+.result-card {
+    max-width: 680px;
+    width: 65%;
+    margin: 0 auto;
+    padding: 30px 40px;
+}
+
 .final-score-box {
     background-color: rgba(213, 199, 181, 0.3);
     border-radius: 50%;
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: 0 auto 20px auto;
+    margin: 0 auto 12px auto;
     border: 2px solid var(--primary-color);
 }
 .final-score-box h2 {
-    font-size: 48px;
+    font-size: 42px;
     margin: 0;
 }
 
-/* ✅ 結算時間樣式 */
 .final-time {
     font-size: 20px;
     font-weight: bold;
     color: var(--primary-color);
     margin-top: -5px;
-    margin-bottom: 25px;
+    margin-bottom: 18px;
 }
 
-.title-text { font-size: 24px; color: var(--secondary-color); }
-.desc-text { font-size: 18px; line-height: 1.6; margin-bottom: 30px;}
-.ending-text { color: var(--error-color); font-style: italic; margin-bottom: 30px;}
-
-/* ================= 音樂控制區 ================= */
-.audio-controls {
-    position: fixed;
-    top: 25px;
-    left: 30px; /* ✅ 從 right 改成 left，把按鈕移到畫面左邊 */
-    background-color: rgba(250, 245, 237, 0.85); 
-    backdrop-filter: blur(5px);                  
-    border: 1px solid var(--border-color);
-    border-radius: 30px;                         
-    padding: 10px 15px; /* 預設較小的邊距，看起來像一顆圓按鈕 */
-    display: flex;
-    align-items: center;
-    gap: 0; /* ✅ 預設間距為 0，把拉條隱藏起來 */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    z-index: 1000; 
-    transition: all 0.4s ease; /* 展開收合的平滑動畫 */
-}
-
-/* ✅ 當滑鼠碰到音樂區塊時的展開狀態 */
-.audio-controls:hover {
-    background-color: rgba(250, 245, 237, 1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    gap: 12px; /* 撐開按鈕與拉條的距離 */
-    padding: 10px 18px; /* 稍微變寬的邊距 */
-}
-
-#mute-btn {
-    font-size: 22px;
-    cursor: pointer;
-    user-select: none;
-    transition: transform 0.2s ease;
-}
-
-#mute-btn:hover {
-    transform: scale(1.1);
-}
-
-/* ✅ 音量拉條：預設隱藏成寬度 0，滑鼠碰到才出現 */
-#volume-slider {
-    width: 0;               /* 預設寬度 0 */
-    opacity: 0;             /* 預設透明看不到 */
-    pointer-events: none;   /* 隱藏時不可點擊 */
-    cursor: pointer;
-    accent-color: var(--primary-color); 
-    transition: all 0.4s ease; /* 拉條滑出的平滑動畫 */
-}
-
-/* ✅ 當滑鼠碰到外框，把拉條展開 */
-.audio-controls:hover #volume-slider {
-    width: 90px;            /* 恢復原本的寬度 */
-    opacity: 1;             /* 恢復清晰可見 */
-    pointer-events: auto;   /* 恢復可點擊調整 */
-}
-
-/* ================= 教學影片按鈕 ================= */
-.video-guide-btn {
-    position: fixed;
-    top: 85px; /* 精算過的位置，剛好在音樂控制列的正下方 */
-    left: 30px;
-    background-color: rgba(250, 245, 237, 0.85); 
-    backdrop-filter: blur(5px);                  
-    border: 1px solid var(--border-color);
-    border-radius: 30px;                         
-    padding: 8px 15px; 
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    z-index: 1000; 
-    transition: all 0.3s ease;
-    
-    /* 文字樣式設定 */
-    text-decoration: none; /* 移除預設的超連結底線 */
-    color: var(--text-color);
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.video-guide-btn:hover {
-    background-color: rgba(250, 245, 237, 1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transform: translateY(-2px); /* 游標滑過時微微上浮 */
-    color: var(--primary-color); /* 文字變成主題的硃砂紅 */
-}
+.title-text { font-size: 22px; color: var(--secondary-color); }
+.desc-text { font-size: 16px; line-height: 1.6; margin-bottom: 20px;}
+.ending-text { color: var(--error-color); font-style: italic; margin-bottom: 20px;}

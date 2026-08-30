@@ -1,5 +1,5 @@
 /* =================資料設定================= */
-// 第一階段：畫間尋寶 
+// 第一階段：畫間尋寶
 const stage1Data = [
     { artwork: "《賞花鍾馗》", hint: "請在畫中找出大師用來隱喻「世俗的權力與金錢虛幻不實(如水中月、鏡中花)」的物品。", answer: "鍾馗一手緊握著的劍鞘", 
       imgSrc: "賞花鍾馗.png", options: ["鍾馗一手緊握著的劍鞘", "頭戴的金帽", "身穿的紅袍", "遠處的山水景觀"],
@@ -69,48 +69,46 @@ document.addEventListener("DOMContentLoaded", () => {
     const muteBtn = document.getElementById('mute-btn');
     let isMuted = false;
 
-    // 初始音量設定 (0.3，避免一開始太大聲嚇到玩家)
-    bgMusic.volume = volumeSlider.value;
+    if (bgMusic && volumeSlider) {
+        bgMusic.volume = volumeSlider.value;
+        volumeSlider.addEventListener('input', (e) => {
+            bgMusic.volume = e.target.value;
+            if (bgMusic.volume == 0) {
+                muteBtn.innerText = '🔇';
+                isMuted = true;
+            } else {
+                muteBtn.innerText = '🔊';
+                isMuted = false;
+            }
+        });
+    }
 
-    // 滑桿調整音量
-    volumeSlider.addEventListener('input', (e) => {
-        bgMusic.volume = e.target.value;
-        if (bgMusic.volume == 0) {
-            muteBtn.innerText = '🔇';
-            isMuted = true;
-        } else {
-            muteBtn.innerText = '🔊';
-            isMuted = false;
-        }
-    });
-
-    // 點擊喇叭圖示切換靜音
-    muteBtn.addEventListener('click', () => {
-        if (isMuted) {
-            // 恢復聲音 (如果滑桿是0，給個預設值 0.3)
-            bgMusic.volume = volumeSlider.value > 0 ? volumeSlider.value : 0.3;
-            if (volumeSlider.value == 0) volumeSlider.value = 0.3;
-            muteBtn.innerText = '🔊';
-            isMuted = false;
-        } else {
-            // 靜音
-            bgMusic.volume = 0;
-            muteBtn.innerText = '🔇';
-            isMuted = true;
-        }
-    });
+    if (muteBtn) {
+        muteBtn.addEventListener('click', () => {
+            if (isMuted) {
+                bgMusic.volume = volumeSlider.value > 0 ? volumeSlider.value : 0.3;
+                if (volumeSlider.value == 0) volumeSlider.value = 0.3;
+                muteBtn.innerText = '🔊';
+                isMuted = false;
+            } else {
+                bgMusic.volume = 0;
+                muteBtn.innerText = '🔇';
+                isMuted = true;
+            }
+        });
+    }
 });
 
 /* 第一階段變數 */
 let currentS1Data = []; 
 let s1Index = 0;
-let s1Score = 50; 
-let s1TimeLeft = 300; 
-let s1TimerId = null;
+let s1Score = 0; 
 
-/* 第二階段變數 */
-let s2Score = 50; 
-let matchedCount = 0;
+/* 第二階段變數 (5組，每組4題) */
+let s2Score = 0; 
+let s2Groups = [];
+let s2GroupIndex = 0;
+let currentGroupMatched = 0;
 let selectedLeft = null;
 let selectedRight = null;
 
@@ -128,8 +126,9 @@ function shuffleArray(array) {
 function switchScreen(screenId) {
     document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
     setTimeout(() => {
-        document.getElementById(screenId).classList.add('active');
-    }, 100);
+        const target = document.getElementById(screenId);
+        if (target) target.classList.add('active');
+    }, 50);
 }
 
 function formatTime(seconds) {
@@ -140,11 +139,12 @@ function formatTime(seconds) {
 
 /* =================流程控制================= */
 function startGame() {
-    gameStartTime = Date.now(); // 玩家按下「進入遊戲」時開始計時
+    gameStartTime = Date.now();
     
-    // ✅ 補上這兩行：讓遊戲開始時，自動播放背景音樂
     const bgMusic = document.getElementById('bg-music');
-    bgMusic.play().catch(e => console.log("等待互動後播放"));
+    if (bgMusic) {
+        bgMusic.play().catch(e => console.log("等待互動後播放"));
+    }
 
     startStage1();
     switchScreen('stage1-screen');
@@ -153,10 +153,8 @@ function startGame() {
 /* --- 第一階段邏輯 --- */
 function startStage1() {
     s1Index = 0;
-    s1Score = 50; 
-    s1TimeLeft = 300; 
+    s1Score = 0; 
     
-    // 洗牌邏輯：《鍾馗戲鶴圖》綁定在一起
     const specialGroup = stage1Data.filter(q => q.artwork === "《鍾馗戲鶴圖》");
     const normalQuestions = stage1Data.filter(q => q.artwork !== "《鍾馗戲鶴圖》");
     shuffleArray(specialGroup);
@@ -177,48 +175,7 @@ function startStage1() {
     document.getElementById('btn-s1-retry').classList.add('hidden');
     document.getElementById('btn-s1-next').classList.add('hidden');
     
-    if (s1TimerId) clearInterval(s1TimerId);
-    s1TimerId = setInterval(updateTimerDisplay, 1000);
-    
     renderS1Question();
-}
-
-function updateTimerDisplay() {
-    s1TimeLeft--;
-    const timerDisplay = document.getElementById('s1-timer');
-    timerDisplay.innerText = formatTime(s1TimeLeft);
-
-    if (s1TimeLeft <= 60) {
-        timerDisplay.parentElement.classList.add('warning');
-    } else {
-        timerDisplay.parentElement.classList.remove('warning');
-    }
-
-    if (s1TimeLeft <= 0) {
-        timeUp();
-    }
-}
-
-function timeUp() {
-    clearInterval(s1TimerId);
-    document.getElementById('s1-timer').innerText = "00:00";
-    
-    document.getElementById('stage1-content').classList.add('hidden');
-    const resultBox = document.getElementById('stage1-result');
-    const msg = document.getElementById('s1-result-msg');
-    
-    resultBox.classList.remove('hidden');
-    
-    if (s1Score >= 35) {
-        finalScoreS1 = s1Score; 
-        msg.innerText = `時間到！第一階段結束。得分：${s1Score} / 50`;
-        msg.style.color = "var(--secondary-color)";
-        document.getElementById('btn-s1-next').classList.remove('hidden');
-    } else {
-        msg.innerText = `時間到！得分：${s1Score} / 50。分數低於門檻 (35分)，需重新測驗。`;
-        msg.style.color = "var(--error-color)";
-        document.getElementById('btn-s1-retry').classList.remove('hidden');
-    }
 }
 
 function renderS1Question() {
@@ -259,14 +216,13 @@ function handleS1Click(btn, selected, correct, explanation) {
     });
 
     if (selected === correct) {
-        feedbackEl.innerHTML = "✅ 點選正確！<br><br>" + explanation;
+        s1Score += 5;
+        document.getElementById('s1-score').innerText = s1Score;
+        feedbackEl.innerHTML = "✅ 點選正確！（+5 分）<br><br>" + explanation;
         feedbackEl.style.color = "var(--text-color)";
     } else {
         btn.classList.add('wrong'); 
-        s1Score = Math.max(0, s1Score - 5);
-        document.getElementById('s1-score').innerText = s1Score;
-        
-        feedbackEl.innerHTML = `❌ 點選錯誤（扣 5 分）。正確解答為：「${correct}」<br><br>${explanation}`;
+        feedbackEl.innerHTML = `❌ 點選錯誤。正確解答為：「${correct}」<br><br>${explanation}`;
         feedbackEl.style.color = "var(--error-color)";
     }
 
@@ -284,52 +240,66 @@ function nextS1Question() {
 }
 
 function endStage1() {
-    clearInterval(s1TimerId); 
-    
     document.getElementById('stage1-content').classList.add('hidden');
     const resultBox = document.getElementById('stage1-result');
     const msg = document.getElementById('s1-result-msg');
     
     resultBox.classList.remove('hidden');
     
-    if (s1Score >= 35) {
+    // ✅ 門檻提高：低於 40 分需重新測驗
+    if (s1Score >= 40) {
         finalScoreS1 = s1Score; 
-        msg.innerText = `第一階段完成！得分：${s1Score} / 50`;
+        msg.innerText = `第一階段完成！獲得分數：${s1Score} / 50`;
         msg.style.color = "var(--secondary-color)";
         document.getElementById('btn-s1-next').classList.remove('hidden');
     } else {
-        msg.innerText = `得分：${s1Score} / 50。分數低於門檻 (35分)，需重新測驗。`;
+        msg.innerText = `得分：${s1Score} / 50。未達過關門檻 (40分)，需重新測驗。`;
         msg.style.color = "var(--error-color)";
         document.getElementById('btn-s1-retry').classList.remove('hidden');
     }
 }
 
-/* --- 第二階段邏輯 --- */
+/* --- 第二階段邏輯 (2x2 圖片佈局，錯了扣 2.5 分) --- */
 function enterStage2() {
     startStage2();
     switchScreen('stage2-screen');
 }
 
 function startStage2() {
-    s2Score = 50; 
-    matchedCount = 0;
-    selectedLeft = null;
-    selectedRight = null;
+    s2Score = 0; 
+    s2GroupIndex = 0;
+
+    const shuffledAll = shuffleArray([...stage2Data]);
+    s2Groups = [];
+    for (let i = 0; i < 5; i++) {
+        s2Groups.push(shuffledAll.slice(i * 4, i * 4 + 4));
+    }
     
     document.getElementById('stage2-content').classList.remove('hidden');
     document.getElementById('stage2-result').classList.add('hidden');
     document.getElementById('btn-s2-retry').classList.add('hidden');
     document.getElementById('btn-s2-next').classList.add('hidden');
+
+    renderS2Group();
+}
+
+function renderS2Group() {
+    currentGroupMatched = 0;
+    selectedLeft = null;
+    selectedRight = null;
+
     document.getElementById('s2-score').innerText = s2Score;
+    document.getElementById('s2-group-progress').innerText = s2GroupIndex + 1;
     document.getElementById('s2-explanation-box').classList.add('hidden');
 
-    const leftCol = document.getElementById('match-left');
+    const currentGroupData = s2Groups[s2GroupIndex];
+    const leftGrid = document.getElementById('match-left');
     const rightCol = document.getElementById('match-right');
-    leftCol.innerHTML = '';
+    leftGrid.innerHTML = '';
     rightCol.innerHTML = '';
 
-    const leftItems = shuffleArray(stage2Data.map((d, index) => ({ src: d.imgSrc, id: index })));
-    const rightItems = shuffleArray(stage2Data.map((d, index) => ({ text: d.meaning, id: index })));
+    const leftItems = shuffleArray(currentGroupData.map((d, index) => ({ src: d.imgSrc, id: index, data: d })));
+    const rightItems = shuffleArray(currentGroupData.map((d, index) => ({ text: d.meaning, id: index, data: d })));
 
     leftItems.forEach(d => {
         const div = document.createElement('div');
@@ -339,7 +309,7 @@ function startStage2() {
         img.src = d.src;
         div.appendChild(img);
         div.onclick = () => handleS2Click(div, 'left');
-        leftCol.appendChild(div);
+        leftGrid.appendChild(div);
     });
 
     rightItems.forEach(d => {
@@ -382,28 +352,33 @@ function checkS2Match() {
         selectedLeft.classList.add('matched');
         selectedRight.classList.add('matched');
         
-        const currentData = stage2Data[id1];
-        feedbackEl.innerHTML = "✅ 配對成功！<br><br>" + currentData.explanation;
-        feedbackEl.style.color = "var(--text-color)";
-        explanationBox.classList.remove('hidden');
-        
-        matchedCount++;
+        s2Score += 2.5; // 配對成功 +2.5 分
+        document.getElementById('s2-score').innerText = s2Score;
+
+        currentGroupMatched++;
         selectedLeft = null;
         selectedRight = null;
 
-        if (matchedCount === stage2Data.length) {
-            setTimeout(endStage2, 2500); 
+        if (currentGroupMatched === 4) {
+            feedbackEl.innerHTML = "🎉 本組配對圓滿完成！點擊下方按鈕繼續。";
+            feedbackEl.style.color = "var(--text-color)";
+            
+            const nextBtn = document.getElementById('btn-s2-next-group');
+            if (s2GroupIndex >= 4) {
+                nextBtn.innerText = "查看第二階段成果 ➔";
+            } else {
+                nextBtn.innerText = `進入第 ${s2GroupIndex + 2} 組 ➔`;
+            }
+
+            explanationBox.classList.remove('hidden');
         }
     } else {
+        // 答錯扣 2.5 分 (最低至 0 分)
         s2Score = Math.max(0, s2Score - 2.5);
         document.getElementById('s2-score').innerText = s2Score;
-        
+
         selectedLeft.classList.add('error-shake');
         selectedRight.classList.add('error-shake');
-        
-        feedbackEl.innerHTML = "❌ 意境不符（扣 2.5 分）";
-        feedbackEl.style.color = "var(--error-color)";
-        explanationBox.classList.remove('hidden');
 
         setTimeout(() => {
             if(selectedLeft) {
@@ -414,7 +389,16 @@ function checkS2Match() {
                 selectedRight.classList.remove('selected', 'error-shake');
                 selectedRight = null;
             }
-        }, 500);
+        }, 400);
+    }
+}
+
+function nextS2Group() {
+    s2GroupIndex++;
+    if (s2GroupIndex < 5) {
+        renderS2Group();
+    } else {
+        endStage2();
     }
 }
 
@@ -425,13 +409,14 @@ function endStage2() {
     
     resultBox.classList.remove('hidden');
     
-    if (s2Score >= 35) {
+    // ✅ 門檻提高：低於 45 分需重新測驗
+    if (s2Score >= 45) {
         finalScoreS2 = s2Score;
-        msg.innerText = `第二階段完成！得分：${s2Score} / 50`;
+        msg.innerText = `第二階段完成！獲得分數：${s2Score} / 50`;
         msg.style.color = "var(--secondary-color)";
         document.getElementById('btn-s2-next').classList.remove('hidden');
     } else {
-        msg.innerText = `得分：${s2Score} / 50。分數低於門檻 (35分)，需重新測驗。`;
+        msg.innerText = `得分：${s2Score} / 50。未達過關門檻 (45分)，需重新測驗。`;
         msg.style.color = "var(--error-color)";
         document.getElementById('btn-s2-retry').classList.remove('hidden');
     }
@@ -442,7 +427,6 @@ function enterFinalResult() {
     const totalScore = finalScoreS1 + finalScoreS2; 
     document.getElementById('final-score').innerText = totalScore;
 
-    // ✅ 計算總通關耗時並顯示
     if (gameStartTime) {
         const totalSeconds = Math.floor((Date.now() - gameStartTime) / 1000);
         document.getElementById('final-time-text').innerText = formatTime(totalSeconds);
@@ -468,6 +452,6 @@ function enterFinalResult() {
 function resetGame() {
     finalScoreS1 = 0;
     finalScoreS2 = 0;
-    gameStartTime = null; // ✅ 重置時間，以便下次遊玩重新計算
+    gameStartTime = null;
     switchScreen('cover-screen');
 }
