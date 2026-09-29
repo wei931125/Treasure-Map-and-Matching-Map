@@ -1,29 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap');
 
-/* 定義 CSS 變數 */
+/* ================= 核心色彩與古典東方色票 ================= */
 :root {
-    --text-color: #2F2E2C;    
-    --border-color: #D5C7B5;  
-    --primary-color: #A33A31; 
-    --primary-hover: #862B23;
-    --secondary-color: #5B7A6B; 
-    --secondary-hover: #4A6559;
-    --error-color: #7A7671;
-    --ancient-brown-line: #745A3C; 
+    --text-color: #2F2E2C;          /* 松煙墨深黑 */
+    --border-color: #C5B39A;        /* 古卷茶褐邊框 */
+    --gold-line: #BFA06E;           /* 典雅金石綾邊 */
+    --primary-color: #9E2A2B;       /* 硃砂絳紅（主按鈕與標題） */
+    --primary-hover: #7D1F20;
+    --secondary-color: #4A6E5D;     /* 沉香松綠（正確與輔助） */
+    --secondary-hover: #3A574A;
+    --error-color: #706B66;         /* 灰黛（錯誤提示） */
+    --ancient-brown-line: #6E5336;  /* 實木框深棕線 */
 }
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    padding: 0;
     color: var(--text-color);
     font-family: "Kaiti TC", "BiauKai", "DFKai-SB", "TW-Kai", "楷體", "Kaiti", 'Noto Serif TC', serif; 
     width: 100vw;
     height: 100vh;
     overflow: hidden; 
+    background-color: #241D17;      /* 底層深木色防止轉場露白 */
 }
 
 /* ================= 介面切換設定 ================= */
@@ -31,18 +33,20 @@ body {
     display: none;
     width: 100vw;
     height: 100vh;
-    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .screen.active {
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: fadeIn 0.35s ease forwards;
+    animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -50,171 +54,149 @@ body {
     display: none !important;
 }
 
-/* ================= 三個情境獨立的背景顏色設定 ================= */
-/* 1. 封面：暖赭金宣紙漸層 */
-#cover-screen {
-    background: radial-gradient(circle, #D8C7AE 0%, #C3AF93 100%);
-    z-index: 10;
-}
-
-/* 2. 第一階段：清朗雅集米白天光漸層 (完美融合第一情境圖邊緣) */
-#stage1-screen {
-    background: radial-gradient(circle, #EFE9DD 0%, #DFD7C7 100%);
-}
-
-/* 3. 第二階段：沉穩蒼松灰赭老絹漸層 (完美融合第二情境圖邊緣) */
-#stage2-screen {
-    background: radial-gradient(circle, #CDC1B0 0%, #B5A793 100%);
-}
-
-/* 4. 結算介面：回歸封面溫潤底色 */
-#result-screen {
-    background: radial-gradient(circle, #D8C7AE 0%, #C3AF93 100%);
-}
-
-/* ================= 全場景 16:9 古風背景畫卷容器 ================= */
-.canvas-container-16-9 {
+/* ================= 全螢幕滿版展廳舞台（100vw x 100vh） ================= */
+.full-screen-container {
     width: 100vw;
-    height: 56.25vw; /* 16:9 比例 */
-    max-height: 100vh;
-    max-width: 177.78vh;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    height: 100vh;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 0 35px rgba(0, 0, 0, 0.25);
-    padding: 18px 25px;
+    padding: 30px 45px;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
-/* 各情境背景圖檔連結 */
+/* ================= 全版背景：宋畫古絹微金宣紋理 ================= */
+
+/* 1. 封面背景 */
 .bg-cover {
     background-image: url('封面背景圖.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
+/* 2. 第一階段：宋院澄心堂宣（天光中心漸變、細密古絹經緯格、沉靜文人墨韻暗角） */
 .bg-stage1 {
-    background-image: url('第一情境背景圖.jpg');
+    background-color: #D2C4AE;
+    background-image: 
+        radial-gradient(ellipse at 50% 48%, rgba(255, 252, 244, 0.94) 0%, rgba(235, 222, 198, 0.82) 48%, rgba(165, 147, 120, 0.98) 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(100, 75, 45, 0.04) 3px, rgba(100, 75, 45, 0.04) 6px),
+        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(100, 75, 45, 0.04) 3px, rgba(100, 75, 45, 0.04) 6px);
+    box-shadow: inset 0 0 150px rgba(55, 40, 25, 0.45);
 }
 
+/* 3. 第二階段：沉香松竹老絹（茶青深沉底色、斜向交織雙菱織錦感、深邃禪意光暈） */
 .bg-stage2 {
-    background-image: url('第二情境背景圖.jpg');
+    background-color: #C7BDAA;
+    background-image: 
+        radial-gradient(ellipse at 50% 48%, rgba(248, 246, 238, 0.92) 0%, rgba(216, 208, 192, 0.84) 48%, rgba(150, 138, 118, 0.98) 100%),
+        repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(74, 110, 93, 0.038) 4px, rgba(74, 110, 93, 0.038) 8px),
+        repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(110, 83, 54, 0.038) 4px, rgba(110, 83, 54, 0.038) 8px);
+    box-shadow: inset 0 0 150px rgba(45, 40, 30, 0.48);
 }
 
-/* ================= 封面專屬：微透宣紙框 ================= */
+/* 4. 結算畫面：金粟圓滿錦箋（溫潤琥珀漸層、金絲交織微光） */
+.bg-result {
+    background-color: #D3C3A3;
+    background-image: 
+        radial-gradient(ellipse at 50% 48%, rgba(255, 253, 244, 0.96) 0%, rgba(230, 215, 186, 0.86) 48%, rgba(162, 140, 102, 0.98) 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(158, 42, 43, 0.025) 4px, rgba(158, 42, 43, 0.025) 8px),
+        repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(110, 83, 54, 0.035) 4px, rgba(110, 83, 54, 0.035) 8px);
+    box-shadow: inset 0 0 160px rgba(65, 45, 25, 0.45);
+}
+
+/* ================= 封面專屬卡片 ================= */
 .cover-card {
-    background-color: rgba(255, 252, 245, 0.22) !important;
-    backdrop-filter: blur(1.5px) !important;
-    -webkit-backdrop-filter: blur(1.5px) !important;
-    border: 1.5px solid var(--ancient-brown-line) !important;
-    position: relative;
-    border-radius: 0 !important;
-    padding: 40px 55px 45px 55px;
-    max-width: 760px;
-    width: 70%;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+    background-color: rgba(255, 252, 245, 0.35) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    border: 2px solid var(--ancient-brown-line) !important;
+    outline: 1.5px solid var(--gold-line) !important;
+    outline-offset: -7px;
+    border-radius: 4px !important;
+    padding: 45px 65px;
+    max-width: 780px;
+    width: 80%;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.25) !important;
     text-align: center;
     z-index: 20; 
 }
 
-.cover-card::before {
-    content: "";
-    position: absolute;
-    top: 7px;
-    bottom: 7px;
-    left: 7px;
-    right: 7px;
-    border: 1.5px solid var(--ancient-brown-line);
-    pointer-events: none;
-}
-
 .cover-card h1 {
-    font-size: 50px;
+    font-size: 52px;
     color: #1F1914;
     letter-spacing: 6px;
-    margin-bottom: 8px;
-    text-shadow: 
-        0 0 10px rgba(255, 255, 255, 1), 
-        0 0 20px rgba(255, 255, 255, 0.95), 
-        0 0 35px rgba(255, 255, 255, 0.85);
+    margin-bottom: 10px;
+    text-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 24px rgba(255, 255, 255, 0.9);
 }
 
 .cover-divider {
-    height: 1px;
+    height: 1.5px;
     background: linear-gradient(90deg, transparent, var(--ancient-brown-line), transparent);
-    margin: 12px auto 18px auto;
-    width: 90%;
+    margin: 14px auto 22px auto;
+    width: 85%;
 }
 
 .cover-card .overview, .cover-card p {
     font-size: 20px;
-    line-height: 1.7;
+    line-height: 1.8;
     color: #1a1613;
     font-weight: bold;
     letter-spacing: 1px;
-    text-shadow: 
-        0 0 8px rgba(255, 255, 255, 1), 
-        0 0 16px rgba(255, 255, 255, 0.9);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 1);
     margin-bottom: 6px;
 }
 
 .cover-card .overview-title {
-    font-size: 23px;
-    color: #B9382B !important;
+    font-size: 24px;
+    color: var(--primary-color) !important;
     margin-bottom: 12px;
     letter-spacing: 2px;
-    text-shadow: 
-        0 0 8px rgba(255, 255, 255, 1), 
-        0 0 16px rgba(255, 255, 255, 0.95);
 }
 
 .btn-cover-start {
     font-size: 22px !important;
-    letter-spacing: 4px;
-    padding: 10px 48px !important;
-    margin-top: 15px;
-    border-radius: 30px !important;
-    background: linear-gradient(180deg, #9C382D 0%, #7E2A20 100%) !important;
+    letter-spacing: 5px;
+    padding: 12px 52px !important;
+    margin-top: 20px;
+    border-radius: 35px !important;
+    background: linear-gradient(180deg, #9E2A2B 0%, #7A1F20 100%) !important;
     color: #FFF !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
-    text-shadow: none !important;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 99; 
-    pointer-events: auto;
+    border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .btn-cover-start:hover {
-    background: linear-gradient(180deg, #B04135 0%, #8D3025 100%) !important;
+    background: linear-gradient(180deg, #B53334 0%, #8D2526 100%) !important;
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* ================= 浮動音樂與教學按鈕 (全局固定) ================= */
+/* ================= 浮動音樂與教學按鈕 ================= */
 .audio-controls {
     position: fixed;
     top: 25px;
     left: 30px; 
-    background-color: rgba(250, 245, 237, 0.88); 
-    backdrop-filter: blur(5px);                  
-    border: 1px solid var(--ancient-brown-line);
+    background-color: rgba(252, 248, 240, 0.94); 
+    backdrop-filter: blur(8px);                  
+    border: 1.5px solid var(--ancient-brown-line);
     border-radius: 30px;                         
     padding: 8px 14px; 
     display: flex;
     align-items: center;
     gap: 0; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
     z-index: 100; 
     transition: all 0.4s ease; 
 }
 
 .audio-controls:hover {
-    background-color: rgba(250, 245, 237, 1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    background-color: #FFFDF9;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.22);
     gap: 12px; 
     padding: 8px 18px; 
 }
@@ -226,38 +208,31 @@ body {
     transition: transform 0.2s ease;
 }
 
-#mute-btn:hover {
-    transform: scale(1.1);
-}
+#mute-btn:hover { transform: scale(1.1); }
 
 #volume-slider {
-    width: 0;               
-    opacity: 0;             
-    pointer-events: none;   
-    cursor: pointer;
+    width: 0; opacity: 0; pointer-events: none; cursor: pointer;
     accent-color: var(--primary-color); 
     transition: all 0.4s ease; 
 }
 
 .audio-controls:hover #volume-slider {
-    width: 85px;            
-    opacity: 1;             
-    pointer-events: auto;   
+    width: 85px; opacity: 1; pointer-events: auto; 
 }
 
 .video-guide-btn {
     position: fixed;
     top: 80px; 
     left: 30px;
-    background-color: rgba(250, 245, 237, 0.88); 
-    backdrop-filter: blur(5px);                  
-    border: 1px solid var(--ancient-brown-line);
+    background-color: rgba(252, 248, 240, 0.94); 
+    backdrop-filter: blur(8px);                  
+    border: 1.5px solid var(--ancient-brown-line);
     border-radius: 30px;                         
     padding: 8px 16px; 
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
     z-index: 100; 
     text-decoration: none; 
     color: var(--text-color);
@@ -267,41 +242,54 @@ body {
 }
 
 .video-guide-btn:hover {
-    background-color: rgba(250, 245, 237, 1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    background-color: #FFFDF9;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.22);
     transform: translateY(-2px); 
     color: var(--primary-color); 
 }
 
-/* ================= 關卡卡片：保有閱讀保護的宣紙襯底 ================= */
+/* ================= 核心卡片：手卷錦綾雙層裱框效果 ================= */
 .card {
-    background-color: rgba(255, 250, 242, 0.72);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-    border: 1.5px solid var(--ancient-brown-line);
     position: relative;
     border-radius: 6px;
-    box-shadow: 0 6px 20px rgba(47, 46, 44, 0.12);
-    text-align: center;
     box-sizing: border-box;
 }
 
 .fit-stage-card {
-    width: 95% !important;
-    height: 94% !important;
+    /* 黃金展示比例：四周留出呼吸空間，完整展現雅緻古絹背景 */
+    width: 92% !important;
+    max-width: 1400px;
+    height: 90% !important;
+    max-height: 890px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 12px 24px !important;
+    padding: 20px 36px 24px 36px !important;
     overflow: hidden;
+
+    /* 溫潤澄心堂熟宣微漸層底 */
+    background: linear-gradient(135deg, rgba(255, 253, 247, 0.96) 0%, rgba(247, 241, 229, 0.94) 100%) !important;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    /* 雙層古典裝裱框線：外紅木框 + 內金綾線 */
+    border: 2px solid var(--ancient-brown-line) !important;
+    outline: 1.5px solid var(--gold-line) !important;
+    outline-offset: -7px;
+    box-shadow: 0 16px 45px rgba(45, 30, 15, 0.22), inset 0 0 50px rgba(215, 195, 165, 0.28) !important;
 }
 
+/* 關卡主標題美化 */
 .fit-stage-card h2 {
-    font-size: 26px; 
+    font-size: 28px; 
     color: var(--primary-color);
-    margin: 0 0 8px 0;
+    margin: 0 0 12px 0;
     font-weight: bold;
+    letter-spacing: 5px;
     flex-shrink: 0;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid rgba(197, 179, 154, 0.5);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.08);
 }
 
 /* ================= 按鈕通用設計 ================= */
@@ -316,15 +304,23 @@ button {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.btn-primary { background-color: var(--primary-color); color: white; }
-.btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+.btn-primary { 
+    background-color: var(--primary-color); 
+    color: white; 
+    box-shadow: 0 3px 10px rgba(158, 42, 43, 0.25);
+}
+.btn-primary:hover { 
+    background-color: var(--primary-hover); 
+    transform: translateY(-2px); 
+    box-shadow: 0 5px 14px rgba(158, 42, 43, 0.35);
+}
 
 .btn-secondary { background-color: var(--secondary-color); color: white; }
 .btn-secondary:hover { background-color: var(--secondary-hover); }
 
 .btn-error { background-color: var(--error-color); color: white; }
 
-/* ================= 第一階段樣式 ================= */
+/* ================= 第一階段：左右雙欄精美排版 ================= */
 #stage1-content {
     flex: 1;
     display: flex;
@@ -337,7 +333,7 @@ button {
     flex: 1;
     display: flex;
     flex-direction: row;
-    gap: 25px;
+    gap: 30px;
     width: 100%;
     align-items: stretch;
     min-height: 0;
@@ -351,71 +347,87 @@ button {
     min-height: 0;
 }
 
+/* 題目導引盒：硃砂立邊與古雅米白底 */
 .question-box {
-    background-color: rgba(255, 255, 255, 0.55);
-    border: 1px dashed var(--border-color);
-    padding: 8px 16px;
-    margin-bottom: 10px;
-    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--primary-color);
+    padding: 10px 20px;
+    margin-bottom: 12px;
+    border-radius: 4px;
     text-align: center;
-    min-height: 75px;
+    min-height: 82px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     flex-shrink: 0;
     box-sizing: border-box;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
 }
 
 .question-box h3 {
-    font-size: 18px;
-    margin: 0 0 4px 0;
+    font-size: 20px;
+    margin: 0 0 5px 0;
     color: var(--primary-color);
+    letter-spacing: 1.5px;
     flex-shrink: 0;
 }
 
 .hint-text {
-    font-size: 15px; 
-    line-height: 1.4;
+    font-size: 15.5px; 
+    line-height: 1.5;
     margin: 0;
-    color: var(--text-color);
+    color: #4A3E36;
+    letter-spacing: 0.5px;
     white-space: normal !important;
     word-break: break-word;
 }
 
+/* 分數題號欄：錦綾邊框質感 */
 .s1-status-box {
-    min-height: 75px;
-    margin-bottom: 10px;
+    min-height: 82px;
+    margin-bottom: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px dashed var(--border-color);
-    background-color: rgba(255, 255, 255, 0.45);
+    border: 1px solid var(--border-color);
+    background-color: rgba(255, 255, 255, 0.88);
     padding: 0 20px;
-    border-radius: 6px;
+    border-radius: 4px;
     flex-shrink: 0;
     box-sizing: border-box;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
 }
 
 .s1-status-box .status {
-    font-size: 20px; 
+    font-size: 21px; 
     font-weight: bold;
     color: var(--text-color);
     margin: 0;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
 }
 
+.s1-status-box .status span {
+    color: var(--primary-color);
+    font-size: 24px;
+}
+
+/* 左側畫芯鏡框：高質感立體絹布畫框效果 */
 .image-container {
     flex: 1;
-    border: 2px solid var(--border-color);
-    padding: 8px;
-    background-color: rgba(255, 255, 255, 0.75);
+    background: #EFE6D6;
+    border: 2px solid rgba(139, 115, 85, 0.7);
+    outline: 1px solid rgba(197, 160, 89, 0.4);
+    outline-offset: -5px;
+    padding: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    border-radius: 6px;
+    border-radius: 4px;
     min-height: 0;
     box-sizing: border-box;
+    box-shadow: inset 0 0 20px rgba(60, 45, 30, 0.16), 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .image-container img {
@@ -423,6 +435,12 @@ button {
     max-height: 100%; 
     display: block;
     object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.18));
+    transition: transform 0.3s ease;
+}
+
+.image-container img:hover {
+    transform: scale(1.02);
 }
 
 .s1-options-wrapper {
@@ -440,12 +458,14 @@ button {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 10px;
+    gap: 12px;
 }
 
+/* 選項按鈕：東方文人木刻箋紙風格 */
 .opt-btn {
-    background-color: rgba(255, 250, 242, 0.9);
-    border: 1px solid var(--border-color);
+    background-color: rgba(255, 253, 248, 0.98);
+    border: 1.5px solid rgba(197, 179, 154, 0.85);
+    border-left: 4px solid rgba(110, 83, 54, 0.45);
     color: var(--text-color);
     text-align: center;      
     display: flex;
@@ -453,46 +473,52 @@ button {
     justify-content: center;
     flex: 1; 
     width: 100%;
-    padding: 6px 16px;
-    font-size: 16px;         
-    font-weight: normal;     
+    padding: 8px 20px;
+    font-size: 16.5px;         
+    font-weight: 500;     
     letter-spacing: 1px;     
-    border-radius: 6px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 6px rgba(47, 46, 44, 0.05);
 }
 
 .opt-btn:hover { 
-    background-color: #FAF0DF; 
-    border-color: var(--primary-color); 
-    transform: translateY(-2px);        
+    background-color: #FAF2E3; 
+    border-color: var(--primary-color);
+    border-left-color: var(--primary-color);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(158, 42, 43, 0.15);
 }
 
 .opt-btn.correct { 
-    background-color: var(--secondary-color); 
-    color: white; 
-    border-color: var(--secondary-color);
+    background-color: var(--secondary-color) !important; 
+    color: white !important; 
+    border-color: var(--secondary-color) !important;
+    border-left-color: #2F4D3F !important;
+    box-shadow: 0 4px 12px rgba(74, 110, 93, 0.3) !important;
 }
 
 .opt-btn.wrong { 
-    background-color: var(--error-color); 
-    color: white; 
-    border-color: var(--error-color);
+    background-color: var(--error-color) !important; 
+    color: white !important; 
+    border-color: var(--error-color) !important;
+    border-left-color: #4A4643 !important;
 }
 
+/* 畫境解析彈窗：典雅松綠封籤 */
 .explanation-box {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(255, 250, 242, 0.98);
+    background-color: rgba(255, 253, 249, 0.98);
     border: 1.5px solid var(--secondary-color);
     border-left: 6px solid var(--secondary-color);
-    padding: 12px 18px;
+    padding: 15px 22px;
     border-radius: 6px;
     text-align: left;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     animation: fadeIn 0.3s ease;
     z-index: 10;
 }
@@ -500,13 +526,14 @@ button {
 .explanation-title {
     color: var(--secondary-color);
     margin: 0 0 6px 0;
-    font-size: 17px;
+    font-size: 18px;
+    letter-spacing: 1px;
 }
 
 .explanation-box .feedback-text {
-    margin: 0 0 8px 0;
-    font-size: 14px;
-    line-height: 1.45;
+    margin: 0 0 10px 0;
+    font-size: 14.5px;
+    line-height: 1.55;
     font-weight: normal;
     color: var(--text-color);
 }
@@ -515,14 +542,49 @@ button {
     display: block;
     width: 100%;
     margin-top: 6px;
-    font-size: 16px;
-    padding: 8px;
+    font-size: 16.5px;
+    padding: 10px;
 }
 
+/* ================= 階段結算區塊：大器垂直水平居中 ================= */
 .result-box {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px dashed var(--border-color);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 20px 0 40px 0;
+    border-top: none;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.result-box h3 {
+    font-size: 32px !important;
+    font-weight: bold;
+    letter-spacing: 2.5px;
+    margin-bottom: 25px !important;
+    padding: 16px 48px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1.5px dashed var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.result-box button {
+    font-size: 20px !important;
+    letter-spacing: 4px;
+    padding: 13px 50px !important;
+    border-radius: 35px !important;
+    box-shadow: 0 6px 18px rgba(158, 42, 43, 0.28) !important;
+    transition: all 0.3s ease;
+}
+
+.result-box button:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 24px rgba(158, 42, 43, 0.38) !important;
 }
 
 /* ================= 第二階段：2x2 圖片 + 右側垂直選項 ================= */
@@ -535,53 +597,61 @@ button {
 
 .s2-top-bar {
     display: flex;
-    gap: 25px;
+    gap: 30px;
     width: 100%;
     flex-shrink: 0;
 }
 
 .s2-guide-box {
     flex: 1 1 0;
-    background-color: rgba(255, 255, 255, 0.55);
-    border: 1px dashed var(--border-color);
-    padding: 8px 16px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    min-height: 60px;
+    background-color: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--secondary-color);
+    padding: 8px 20px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    min-height: 66px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     box-sizing: border-box;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
 }
 
 .s2-status-box {
     flex: 1 1 0;
-    min-height: 60px;
-    margin-bottom: 10px;
+    min-height: 66px;
+    margin-bottom: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px dashed var(--border-color);
-    background-color: rgba(255, 255, 255, 0.45);
+    border: 1px solid var(--border-color);
+    background-color: rgba(255, 255, 255, 0.88);
     padding: 0 20px;
-    border-radius: 6px;
+    border-radius: 4px;
     box-sizing: border-box;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
 }
 
 .s2-status-box .status {
-    font-size: 20px;
+    font-size: 21px; 
     font-weight: bold;
     color: var(--text-color);
     margin: 0;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+}
+
+.s2-status-box .status span {
+    color: var(--primary-color);
+    font-size: 24px;
 }
 
 .s2-main-grid {
     flex: 1;
     display: flex;
     flex-direction: row;
-    gap: 25px;
+    gap: 30px;
     width: 100%;
     align-items: stretch;
     min-height: 0;
@@ -593,7 +663,7 @@ button {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 12px;
+    gap: 14px;
     min-height: 0;
     height: 100%;
 }
@@ -613,22 +683,24 @@ button {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 10px;
+    gap: 12px;
 }
 
 .match-item-img {
-    background-color: rgba(255, 255, 255, 0.75);
-    border: 2px solid var(--border-color);
-    border-radius: 6px;
+    background: #EFE6D6;
+    border: 2px solid rgba(139, 115, 85, 0.6);
+    outline: 1px solid rgba(197, 160, 89, 0.35);
+    outline-offset: -4px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    box-shadow: inset 0 0 14px rgba(60, 45, 30, 0.12), 0 3px 8px rgba(0,0,0,0.06);
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    padding: 10px;
     box-sizing: border-box;
     overflow: hidden;
 }
@@ -637,24 +709,25 @@ button {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    border-radius: 4px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));
 }
 
 .match-item-img:hover { 
     border-color: var(--primary-color); 
     transform: translateY(-2px);
+    box-shadow: inset 0 0 14px rgba(158, 42, 43, 0.15), 0 5px 14px rgba(0,0,0,0.1);
 }
 
 .match-item-img.selected { 
     border-color: var(--primary-color); 
-    box-shadow: 0 0 10px rgba(195, 74, 65, 0.4);
-    transform: scale(1.02);
+    box-shadow: 0 0 16px rgba(158, 42, 43, 0.5);
+    transform: scale(1.03);
     z-index: 10;
 }
 
 .match-item-img.matched { 
     border-color: var(--secondary-color); 
-    opacity: 0.55; 
+    opacity: 0.5; 
     pointer-events: none; 
     filter: grayscale(80%);
 }
@@ -665,8 +738,9 @@ button {
 }
 
 .match-item-text {
-    background-color: rgba(255, 250, 242, 0.9);
-    border: 1px solid var(--border-color);
+    background-color: rgba(255, 253, 248, 0.98);
+    border: 1.5px solid rgba(197, 179, 154, 0.85);
+    border-left: 4px solid rgba(110, 83, 54, 0.45);
     color: var(--text-color);
     text-align: left;
     display: flex;
@@ -674,27 +748,30 @@ button {
     justify-content: flex-start;
     flex: 1; 
     width: 100%;
-    padding: 10px 18px;
-    font-size: 16px;
-    line-height: 1.35;
+    padding: 12px 22px;
+    font-size: 16.5px;
+    line-height: 1.4;
     letter-spacing: 1px;
-    border-radius: 6px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 6px rgba(47, 46, 44, 0.05);
     box-sizing: border-box;
 }
 
 .match-item-text:hover { 
-    background-color: #FAF0DF; 
+    background-color: #FAF2E3; 
     border-color: var(--primary-color);
-    transform: translateY(-2px);
+    border-left-color: var(--primary-color);
+    transform: translateX(4px);
 }
 
 .match-item-text.selected { 
     background-color: var(--primary-color); 
     color: white; 
     border-color: var(--primary-color);
+    border-left-color: #6E1A1B;
+    box-shadow: 0 4px 14px rgba(158, 42, 43, 0.35);
 }
 
 .match-item-text.matched { 
@@ -721,36 +798,61 @@ button {
 
 /* ================= 最終結算區塊 ================= */
 .result-card {
-    max-width: 680px;
-    width: 65%;
+    max-width: 720px;
+    width: 70%;
     margin: 0 auto;
-    padding: 30px 40px;
+    padding: 40px 50px;
+    border: 2px solid var(--ancient-brown-line) !important;
+    outline: 1.5px solid var(--gold-line) !important;
+    outline-offset: -7px;
+    background: linear-gradient(135deg, rgba(255, 253, 247, 0.96) 0%, rgba(247, 241, 229, 0.94) 100%) !important;
 }
 
 .final-score-box {
     background-color: rgba(213, 199, 181, 0.3);
     border-radius: 50%;
-    width: 130px;
-    height: 130px;
+    width: 140px;
+    height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: 0 auto 12px auto;
-    border: 2px solid var(--primary-color);
+    margin: 0 auto 16px auto;
+    border: 2.5px solid var(--primary-color);
+    box-shadow: 0 4px 18px rgba(158, 42, 43, 0.15);
 }
+
 .final-score-box h2 {
-    font-size: 42px;
+    font-size: 46px;
+    color: var(--primary-color);
     margin: 0;
 }
 
 .final-time {
-    font-size: 20px;
+    font-size: 21px;
     font-weight: bold;
     color: var(--primary-color);
     margin-top: -5px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
 }
 
-.title-text { font-size: 22px; color: var(--secondary-color); }
-.desc-text { font-size: 16px; line-height: 1.6; margin-bottom: 20px;}
-.ending-text { color: var(--error-color); font-style: italic; margin-bottom: 20px;}
+.title-text { 
+    font-size: 24px; 
+    color: var(--secondary-color); 
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+}
+
+.desc-text { 
+    font-size: 17px; 
+    line-height: 1.7; 
+    margin-bottom: 24px;
+    color: #4A3E36;
+}
+
+.ending-text { 
+    color: #8C8074; 
+    font-style: italic; 
+    margin-bottom: 22px;
+    letter-spacing: 1px;
+}

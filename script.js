@@ -246,7 +246,6 @@ function endStage1() {
     
     resultBox.classList.remove('hidden');
     
-    // ✅ 門檻提高：低於 40 分需重新測驗
     if (s1Score >= 40) {
         finalScoreS1 = s1Score; 
         msg.innerText = `第一階段完成！獲得分數：${s1Score} / 50`;
@@ -259,7 +258,7 @@ function endStage1() {
     }
 }
 
-/* --- 第二階段邏輯 (2x2 圖片佈局，錯了扣 2.5 分) --- */
+/* --- 第二階段邏輯 --- */
 function enterStage2() {
     startStage2();
     switchScreen('stage2-screen');
@@ -409,7 +408,6 @@ function endStage2() {
     
     resultBox.classList.remove('hidden');
     
-    // ✅ 門檻提高：低於 45 分需重新測驗
     if (s2Score >= 45) {
         finalScoreS2 = s2Score;
         msg.innerText = `第二階段完成！獲得分數：${s2Score} / 50`;
